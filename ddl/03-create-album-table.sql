@@ -1,6 +1,6 @@
 CREATE TABLE example.album (
-    id uuid primary key default gen_random_uuid(),
-    artist_id uuid references example.artist(id),
+    id varchar(36) primary key default gen_random_uuid(),
+    artist_id varchar(36) references example.artist(id),
     title text not null
 );
 

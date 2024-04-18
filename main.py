@@ -1,4 +1,5 @@
-from webapp.app import create_app, AppConfig
+from webapp.app import create_app
+from webapp.config import AppConfig
 
 
 def main():

@@ -1,34 +1,15 @@
-import os
-
 from flask import Flask
-from pydantic import BaseModel
 
-from webapp.api import health
+from webapp.api import album, artist, health
+from webapp.config import AppConfig
+from webapp.database import engine
 
 
 blueprints = [
-    health.blueprint
+    album.blueprint,
+    artist.blueprint,
+    health.blueprint,
 ]
-
-
-class AppConfig(BaseModel):
-    """Defines the necessary configuration for the Flask application to run"""
-
-    DEBUG: bool = True
-    HOST: str = "0.0.0.0"
-    PORT: str = "8000"
-    SECRET_KEY: str = "dev"
-
-    @classmethod
-    def from_env(cls) -> "AppConfig":
-        """
-        Returns an AppConfig instance sourced from what the values stored in
-        `os.environ`.
-
-        This should be capable of automatically detecting any variable whose
-        name exactly matches the class's attribute name.
-        """
-        return AppConfig(**os.environ)
 
 
 def create_app(config: AppConfig) -> Flask:
@@ -38,6 +19,10 @@ def create_app(config: AppConfig) -> Flask:
     """
     app = Flask(__name__)
     app.config.from_mapping(**config.model_dump())
+
+    # initialize connection to the DB so that we know the application will
+    # run properly
+    engine.initialize(config)
 
     for blueprint in blueprints:
         app.register_blueprint(blueprint)

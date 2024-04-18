@@ -1,2 +1,4 @@
+prod*.env
+
 *.swp
 __pycache__/
